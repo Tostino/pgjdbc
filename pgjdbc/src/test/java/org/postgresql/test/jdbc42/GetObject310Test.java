@@ -44,7 +44,6 @@ public class GetObject310Test extends BaseTest4 {
   private static final ZoneOffset GMT05 = ZoneOffset.of("-05:00"); // -0500 always
   private static final ZoneOffset GMT13 = ZoneOffset.of("+13:00"); // +1300 always
 
-
   public GetObject310Test(BinaryMode binaryMode) {
     setBinaryMode(binaryMode);
   }
@@ -188,6 +187,9 @@ public class GetObject310Test extends BaseTest4 {
             "2000-03-26T01:59:59", "2000-03-26T02:00:00", "2000-03-26T02:00:01", "2000-03-26T02:59:59",
             "2000-03-26T03:00:00", "2000-03-26T03:00:01", "2000-03-26T03:59:59", "2000-03-26T04:00:00",
             "2000-03-26T04:00:01", "2000-03-26T04:00:00.000001",
+
+            // This is a pre-1970 date, so check if it is rounded properly
+            "1950-07-20T02:00:00",
 
             // On 2000-10-29 03:00:00 Moscow went to regular time, thus local time became 02:00:00
             "2000-10-29T01:59:59", "2000-10-29T02:00:00", "2000-10-29T02:00:01", "2000-10-29T02:59:59",

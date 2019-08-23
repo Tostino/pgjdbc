@@ -397,7 +397,6 @@ public class TestUtil {
     }
   }
 
-
   /*
    * Helper - creates a test table for use by a test
    */
@@ -914,6 +913,18 @@ public class TestUtil {
 
     if (stillActive) {
       throw new TimeoutException("Wait stop replication slot " + timeInWait + " timeout occurs");
+    }
+  }
+
+  public static void execute(String sql, Connection connection) throws SQLException {
+    Statement stmt = connection.createStatement();
+    try {
+      stmt.execute(sql);
+    } finally {
+      try {
+        stmt.close();
+      } catch (SQLException e) {
+      }
     }
   }
 }

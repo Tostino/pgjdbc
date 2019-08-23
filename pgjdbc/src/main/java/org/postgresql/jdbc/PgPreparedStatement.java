@@ -1389,7 +1389,6 @@ class PgPreparedStatement extends PgStatement implements PreparedStatement {
     return new PgParameterMetaData(conn, oids);
   }
 
-
   //#if mvn.project.property.postgresql.jdbc.spec >= "JDBC4.2"
   public void setObject(int parameterIndex, Object x, java.sql.SQLType targetSqlType,
       int scaleOrLength) throws SQLException {
@@ -1401,7 +1400,6 @@ class PgPreparedStatement extends PgStatement implements PreparedStatement {
     throw Driver.notImplemented(this.getClass(), "setObject");
   }
   //#endif
-
 
   public void setRowId(int parameterIndex, RowId x) throws SQLException {
     throw Driver.notImplemented(this.getClass(), "setRowId(int, RowId)");

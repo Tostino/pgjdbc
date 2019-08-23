@@ -39,6 +39,8 @@ import org.postgresql.util.PSQLException;
 import org.postgresql.util.PSQLState;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -549,6 +551,15 @@ public class PgConnection implements BaseConnection {
       }
     }
 
+    if (type.equals("inet")) {
+      try {
+        return InetAddress.getByName(value);
+      } catch (UnknownHostException e) {
+        throw new PSQLException(GT.tr("IP address {0} of a host could not be determined", value),
+          PSQLState.CONNECTION_FAILURE, e);
+      }
+    }
+
     PGobject obj = null;
 
     if (LOGGER.isLoggable(Level.FINEST)) {
@@ -696,7 +707,6 @@ public class PgConnection implements BaseConnection {
     firstWarning = null;
   }
 
-
   @Override
   public void setReadOnly(boolean readOnly) throws SQLException {
     checkClosed();
@@ -784,7 +794,6 @@ public class PgConnection implements BaseConnection {
           PSQLState.CONNECTION_DOES_NOT_EXIST);
     }
   }
-
 
   @Override
   public void rollback() throws SQLException {
@@ -1726,4 +1735,15 @@ public class PgConnection implements BaseConnection {
     }
     return ps;
   }
+
+  @Override
+  public final Map<String,String> getParameterStatuses() {
+    return queryExecutor.getParameterStatuses();
+  }
+
+  @Override
+  public final String getParameterStatus(String parameterName) {
+    return queryExecutor.getParameterStatus(parameterName);
+  }
+
 }

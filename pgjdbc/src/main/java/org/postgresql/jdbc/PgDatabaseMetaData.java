@@ -91,7 +91,6 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
     return nameDataLength - 1;
   }
 
-
   public boolean allProceduresAreCallable() throws SQLException {
     return true; // For now...
   }
@@ -1480,7 +1479,7 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
     f[20] = new Field("SCOPE_TABLE", Oid.VARCHAR);
     f[21] = new Field("SOURCE_DATA_TYPE", Oid.INT2);
     f[22] = new Field("IS_AUTOINCREMENT", Oid.VARCHAR);
-    f[23] = new Field( "IS_GENERATED", Oid.VARCHAR);
+    f[23] = new Field( "IS_GENERATEDCOLUMN", Oid.VARCHAR);
 
     String sql;
     // a.attnum isn't decremented when preceding columns are dropped,
@@ -2415,7 +2414,6 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
     return type != ResultSet.TYPE_SCROLL_SENSITIVE;
   }
 
-
   public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
     // These combinations are not supported!
     if (type == ResultSet.TYPE_SCROLL_SENSITIVE) {
@@ -2430,7 +2428,6 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
     // Everything else we do
     return true;
   }
-
 
   /* lots of unsupported stuff... */
   public boolean ownUpdatesAreVisible(int type) throws SQLException {
@@ -2544,7 +2541,6 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
     sql += " order by data_type, type_schem, type_name";
     return createMetaDataStatement().executeQuery(sql);
   }
-
 
   @Override
   public Connection getConnection() throws SQLException {

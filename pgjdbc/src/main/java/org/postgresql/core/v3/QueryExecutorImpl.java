@@ -1731,8 +1731,6 @@ public class QueryExecutorImpl extends QueryExecutorBase {
     pgStream.sendChar(0); // statement name terminator
   }
 
-
-
   // sendOneQuery sends a single statement via the extended query protocol.
   // Per the FE/BE docs this is essentially the same as how a simple query runs
   // (except that it generates some extra acknowledgement messages, and we
@@ -2415,7 +2413,7 @@ public class QueryExecutorImpl extends QueryExecutorBase {
    * Receive the field descriptions from the back end.
    */
   private Field[] receiveFields() throws IOException {
-    int msgSize = pgStream.receiveInteger4();
+    pgStream.receiveInteger4(); // MESSAGE SIZE
     int size = pgStream.receiveInteger2();
     Field[] fields = new Field[size];
 
@@ -2442,7 +2440,7 @@ public class QueryExecutorImpl extends QueryExecutorBase {
   }
 
   private void receiveAsyncNotify() throws IOException {
-    int msglen = pgStream.receiveInteger4();
+    pgStream.receiveInteger4(); // MESSAGE SIZE
     int pid = pgStream.receiveInteger4();
     String msg = pgStream.receiveString();
     String param = pgStream.receiveString();
@@ -2613,12 +2611,17 @@ public class QueryExecutorImpl extends QueryExecutorBase {
 
   public void receiveParameterStatus() throws IOException, SQLException {
     // ParameterStatus
-    int len = pgStream.receiveInteger4();
+    pgStream.receiveInteger4(); // MESSAGE SIZE
     String name = pgStream.receiveString();
     String value = pgStream.receiveString();
 
     if (LOGGER.isLoggable(Level.FINEST)) {
       LOGGER.log(Level.FINEST, " <=BE ParameterStatus({0} = {1})", new Object[]{name, value});
+    }
+
+    /* Update client-visible parameter status map for getParameterStatuses() */
+    if (name != null && !name.equals("")) {
+      onParameterStatus(name, value);
     }
 
     if (name.equals("client_encoding")) {
@@ -2746,7 +2749,6 @@ public class QueryExecutorImpl extends QueryExecutorBase {
   private final boolean allowEncodingChanges;
   private final boolean cleanupSavePoints;
 
-
   /**
    * <p>The estimated server response size since we last consumed the input stream from the server, in
    * bytes.</p>
@@ -2768,12 +2770,10 @@ public class QueryExecutorImpl extends QueryExecutorBase {
               SqlCommand.createStatementTypeInfo(SqlCommandType.BLANK)
           ), null, false);
 
-
   private final SimpleQuery autoSaveQuery =
       new SimpleQuery(
           new NativeQuery("SAVEPOINT PGJDBC_AUTOSAVE", new int[0], false, SqlCommand.BLANK),
           null, false);
-
 
   private final SimpleQuery releaseAutoSave =
       new SimpleQuery(

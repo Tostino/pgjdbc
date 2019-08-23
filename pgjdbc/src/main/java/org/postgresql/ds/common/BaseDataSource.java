@@ -487,7 +487,6 @@ public abstract class BaseDataSource implements CommonDataSource, Referenceable 
     return PGProperty.CANCEL_SIGNAL_TIMEOUT.getIntNoCheck(properties);
   }
 
-
   /**
    * @param enabled if SSL is enabled
    * @see PGProperty#SSL
